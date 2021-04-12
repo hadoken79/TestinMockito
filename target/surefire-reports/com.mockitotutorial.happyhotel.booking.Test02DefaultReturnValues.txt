@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.mockitotutorial.happyhotel.booking.Test02DefaultReturnValues
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 sec - in com.mockitotutorial.happyhotel.booking.Test02DefaultReturnValues
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 sec - in com.mockitotutorial.happyhotel.booking.Test02DefaultReturnValues

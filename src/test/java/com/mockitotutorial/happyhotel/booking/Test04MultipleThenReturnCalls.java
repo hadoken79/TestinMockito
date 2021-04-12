@@ -1,15 +1,20 @@
 package com.mockitotutorial.happyhotel.booking;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
-class Test02DefaultReturnValues {
+class Test04MultipleThenReturnCalls {
     private BookingService bookingService;
 
     private PaymentService paymentServiceMock;
@@ -29,22 +34,29 @@ class Test02DefaultReturnValues {
     }
 
     @Test
-    void should_CountAvailablePlaces(){
+    void should_CountAvailablePlaces_When_CalledMultipleTimes(){
         //given
-        int expected = 0;
+        when(roomServiceMock.getAvailableRooms())
+                .thenReturn(Collections.singletonList(new Room("Room 1", 2)))
+                .thenReturn(Collections.emptyList());
+
+
+        int expectedFirst = 2;
+        int expectedSecond = 0;
 
         //when
-        int actual = bookingService.getAvailablePlaceCount();
-        /* mockito, when nothing is defined, returns "nice" values.
-        fe. the get availablePlaceCounts will return 0. The Method called uses the
-        roomService.getAvailableRooms() method. Mockito checks for returnTypes and returns a empty List of Rooms for this Method
-        so the call still works and returns 0
-         */
+        int actualFirst = this.bookingService.getAvailablePlaceCount();
+        int actualSecond = this.bookingService.getAvailablePlaceCount();
 
         //then
-        assertEquals(expected, actual);
+        assertAll(
+                () -> assertEquals(expectedFirst, actualFirst),
+                () -> assertEquals(expectedSecond, actualSecond)
+        );
 
     }
+
+
 
 
 
