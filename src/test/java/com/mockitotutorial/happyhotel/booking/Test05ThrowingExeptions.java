@@ -1,20 +1,18 @@
 package com.mockitotutorial.happyhotel.booking;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
-class Test04MultipleThenReturnCalls {
+class Test05ThrowingExeptions {
     private BookingService bookingService;
 
     private PaymentService paymentServiceMock;
@@ -34,26 +32,20 @@ class Test04MultipleThenReturnCalls {
     }
 
     @Test
-    void should_CountAvailablePlaces_When_CalledMultipleTimes(){
+    void should_calculateCorrectPrice_when_correctPrice(){
         //given
-        when(roomServiceMock.getAvailableRooms())
-                .thenReturn(Collections.singletonList(new Room("Room 1", 2)))
-                .thenReturn(Collections.emptyList());
-
-
-        int expectedFirst = 2;
-        int expectedSecond = 0;
+        BookingRequest bookingRequest = new BookingRequest(
+                "1",
+                LocalDate.of(2020, 01, 01),
+                LocalDate.of(2020, 01, 05),2, false);
+        when(roomServiceMock.findAvailableRoomId(bookingRequest))
+                .thenThrow(BusinessException.class);
 
         //when
-        int actualFirst = this.bookingService.getAvailablePlaceCount();
-        int actualSecond = this.bookingService.getAvailablePlaceCount();
+        Executable executable = () -> bookingService.makeBooking(bookingRequest);
 
         //then
-        assertAll(
-                () -> assertEquals(expectedFirst, actualFirst),
-                () -> assertEquals(expectedSecond, actualSecond)
-        );
-
+        assertThrows(BusinessException.class, executable);
 
     }
 
