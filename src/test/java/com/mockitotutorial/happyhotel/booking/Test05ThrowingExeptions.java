@@ -32,7 +32,7 @@ class Test05ThrowingExeptions {
     }
 
     @Test
-    void should_calculateCorrectPrice_when_correctPrice(){
+    void should_throwException_when_noRoomAvailable(){
         //given
         BookingRequest bookingRequest = new BookingRequest(
                 "1",

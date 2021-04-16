@@ -2,17 +2,16 @@ package com.mockitotutorial.happyhotel.booking;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
+
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 
-class Test06Matchers {
+class Test07VerifyingBehavior {
     private BookingService bookingService;
 
     private PaymentService paymentServiceMock;
@@ -32,24 +31,35 @@ class Test06Matchers {
     }
 
     @Test
-    void should_notCompleteBooking_when_PriceToHigh(){
+    void should_invokePayment_when_prepaid(){
         //given
         BookingRequest bookingRequest = new BookingRequest(
                 "1",
                 LocalDate.of(2020, 01, 01),
                 LocalDate.of(2020, 01, 05),2, true);
 
-        when(this.paymentServiceMock.pay(any(),anyDouble()))//with this matchers no explicit arguments have be be provided. any() is for Objects, anyDouble() for this double primitive
-                .thenThrow(BusinessException.class);        //the arguments can be mixed, matchers and real, but then feg. eq(400.0) as equals has to be used
-
-        // when(this.paymentServiceMock.pay(any(),eq(400.0)))
-        //      .thenThrow(BusinessException.class);
-
         //when
-        Executable executable = () -> bookingService.makeBooking(bookingRequest);
+        bookingService.makeBooking(bookingRequest);
 
         //then
-        assertThrows(BusinessException.class, executable);
+        verify(paymentServiceMock).pay(bookingRequest, 400.0);
+        //optional can be checked how often e method is called
+        //verify(paymentServiceMock, times(2)).pay(bookingRequest, 400.0);
+        verifyNoMoreInteractions(paymentServiceMock);//make sure no other method is called after pay
+    }
 
+    @Test
+    void should_NotinvokePayment_when_Notprepaid(){
+        //given
+        BookingRequest bookingRequest = new BookingRequest(
+                "1",
+                LocalDate.of(2020, 01, 01),
+                LocalDate.of(2020, 01, 05),2, false);
+
+        //when
+        bookingService.makeBooking(bookingRequest);
+
+        //then
+        verify(paymentServiceMock, never()).pay(any(), anyDouble());
     }
 }

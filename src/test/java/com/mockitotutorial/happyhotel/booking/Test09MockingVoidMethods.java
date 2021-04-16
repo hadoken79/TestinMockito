@@ -7,12 +7,12 @@ import org.junit.jupiter.api.function.Executable;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.*;
 
 
-class Test06Matchers {
+class Test09MockingVoidMethods {
     private BookingService bookingService;
 
     private PaymentService paymentServiceMock;
@@ -32,18 +32,13 @@ class Test06Matchers {
     }
 
     @Test
-    void should_notCompleteBooking_when_PriceToHigh(){
+    void should_throwException_when_mailNotReady(){
         //given
         BookingRequest bookingRequest = new BookingRequest(
                 "1",
                 LocalDate.of(2020, 01, 01),
-                LocalDate.of(2020, 01, 05),2, true);
-
-        when(this.paymentServiceMock.pay(any(),anyDouble()))//with this matchers no explicit arguments have be be provided. any() is for Objects, anyDouble() for this double primitive
-                .thenThrow(BusinessException.class);        //the arguments can be mixed, matchers and real, but then feg. eq(400.0) as equals has to be used
-
-        // when(this.paymentServiceMock.pay(any(),eq(400.0)))
-        //      .thenThrow(BusinessException.class);
+                LocalDate.of(2020, 01, 05),2, false);
+        doThrow(new BusinessException()).when(mailSenderMock).sendBookingConfirmation(any());
 
         //when
         Executable executable = () -> bookingService.makeBooking(bookingRequest);
@@ -52,4 +47,24 @@ class Test06Matchers {
         assertThrows(BusinessException.class, executable);
 
     }
+
+    @Test
+    void should_not_throwException_when_mailReady(){
+        //given
+        BookingRequest bookingRequest = new BookingRequest(
+                "1",
+                LocalDate.of(2020, 01, 01),
+                LocalDate.of(2020, 01, 05),2, false);
+        doNothing().when(mailSenderMock).sendBookingConfirmation(any());
+
+        //when
+        bookingService.makeBooking(bookingRequest);
+
+        //then
+        //expect no exception is thrown
+
+    }
+
+
+
 }
