@@ -1,2 +1,10 @@
-com\mockitotutorial\happyhotel\booking\Test03ReturnCustomValues.class
-com\mockitotutorial\happyhotel\booking\Test01FirstMocks.class
+com/mockitotutorial/happyhotel/booking/Test09MockingVoidMethods.class
+com/mockitotutorial/happyhotel/booking/Test06Matchers.class
+com/mockitotutorial/happyhotel/booking/Test07VerifyingBehavior.class
+com/mockitotutorial/happyhotel/booking/Test05ThrowingExeptions.class
+com/mockitotutorial/happyhotel/booking/Test01FirstMocks.class
+com/mockitotutorial/happyhotel/booking/Test00SanityCheck.class
+com/mockitotutorial/happyhotel/booking/Test04MultipleThenReturnCalls.class
+com/mockitotutorial/happyhotel/booking/Test03ReturnCustomValues.class
+com/mockitotutorial/happyhotel/booking/Test08Spies.class
+com/mockitotutorial/happyhotel/booking/Test02DefaultReturnValues.class
